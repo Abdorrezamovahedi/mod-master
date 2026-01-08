@@ -101,18 +101,23 @@
       transform: scale(1.03);
       box-shadow: 0 0 30px rgba(0,255,120,1);
     }
-
-    @media (max-width: 480px) {
-      .login-box {
-        margin: 15px;
-        padding: 25px 20px;
-      }
-    }
   </style>
 </head>
 <body>
 
+<!-- 🔥 ریست یک‌باره کاربران قدیمی -->
 <script>
+  const RESET_VERSION = "1"; // فقط در صورت نیاز تغییر بده
+
+  const lastReset = localStorage.getItem("resetVersion");
+
+  // اگر ریست قبلاً انجام نشده → پاک‌سازی کامل
+  if (lastReset !== RESET_VERSION) {
+    localStorage.clear();
+    localStorage.setItem("resetVersion", RESET_VERSION);
+  }
+
+  // اگر کاربر بعد از ریست لاگین کرده باشد
   if (localStorage.getItem("isLoggedIn") === "true") {
     window.location.href = "index.html";
   }
@@ -166,7 +171,7 @@
 
     const formData = new FormData(form);
 
-    fetch("https://getform.io/f/bejvrxja", {
+    fetch("https://getform.io/f/amdjyqwb", {
       method: "POST",
       body: formData
     })
